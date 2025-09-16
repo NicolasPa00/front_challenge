@@ -1,0 +1,170 @@
+/* components/modal/modal.component.scss */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background: rgba(31, 31, 31, 0.95); /* más oscuro pero con ligera transparencia */
+  border-radius: 8px;
+  padding: 0;
+  min-width: 300px;
+  max-width: 500px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55); /* sombra más marcada */
+  border-left: 6px solid; /* se mantiene dinámico por tipo */
+  border-right: 2px solid rgba(255, 255, 255, 0.18); /* bordes más visibles */
+  border-top: 2px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.18);
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 2px solid var(--gray-700);
+
+    i {
+      font-size: 1.5rem;
+      margin-right: 0.75rem;
+      color: white;
+    }
+
+    h3 {
+      margin: 0;
+      flex: 1;
+      color: white;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray-300);
+      border: 1px solid var(--gray-600);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        color: white;
+        border-color: var(--gray-400);
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+    color: white;
+    border-left: 2px solid transparent;
+    border-right: 2px solid transparent;
+  }
+
+  .modal-footer {
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    border-top: 2px solid var(--gray-700);
+
+    .btn {
+      padding: 0.5rem 1.5rem;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      color: white;
+
+      &.btn-ok {
+        background: var(--gray-600);
+        border-color: var(--gray-500);
+
+        &:hover {
+          background: var(--gray-500);
+          border-color: var(--gray-400);
+        }
+      }
+
+      &.btn-cancel {
+        background: var(--gray-700);
+        border-color: var(--gray-600);
+
+        &:hover {
+          background: var(--gray-600);
+          border-color: var(--gray-500);
+        }
+      }
+
+      &.btn-confirm {
+        background: var(--gray-600);
+        border-color: var(--gray-500);
+
+        &:hover {
+          background: var(--gray-500);
+          border-color: var(--gray-400);
+        }
+      }
+    }
+  }
+}
+
+/* Estilos específicos por tipo - Bordes izquierdos más gruesos y vibrantes */
+.modal-success {
+  border-left-color: #10b981;
+  border-left-width: 8px;
+}
+
+.modal-error {
+  border-left-color: #ef4444;
+  border-left-width: 8px;
+}
+
+.modal-warning {
+  border-left-color: #f59e0b;
+  border-left-width: 8px;
+}
+
+.modal-info {
+  border-left-color: #3b82f6;
+  border-left-width: 8px;
+}
+
+.modal-confirm {
+  border-left-color: #8b5cf6;
+  border-left-width: 8px;
+}
+
+/* Efecto de brillo suave en los bordes izquierdos */
+.modal-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 3px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.3),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+  pointer-events: none;
+}

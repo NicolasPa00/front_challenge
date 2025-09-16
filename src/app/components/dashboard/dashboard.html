@@ -1,0 +1,204 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <h1 class="dashboard-title">Mi lista de tareas</h1>
+    <button class="btn btn-logout" (click)="logout()" title="Cerrar sesión">
+      <span class="btn-text">Cerrar Sesión</span>
+      <span class="btn-icon">→</span>
+    </button>
+  </header>
+
+  <!-- Contenido principal de dos columnas -->
+  <main class="dashboard-main">
+    <!-- Columna izquierda: Formulario y estadísticas -->
+    <div class="dashboard-left">
+      <!-- Formulario para agregar tareas -->
+      <section class="task-form-section glassmorphism">
+        <h2>Agregar nueva tarea</h2>
+        <form class="task-form" [formGroup]="taskForm" (ngSubmit)="addTask()">
+          <div class="form-group">
+            <label for="taskTitle" class="form-label">Título</label>
+            <input
+              type="text"
+              id="taskTitle"
+              class="form-input"
+              formControlName="title"
+              placeholder="¿Qué necesitas hacer?"
+              required
+              aria-label="Título de la tarea">
+            @if (taskForm.get('title')?.invalid && taskForm.get('title')?.touched) {
+              <div class="error-message">El título es requerido</div>
+            }
+          </div>
+          <div class="form-group">
+            <label for="taskDescription" class="form-label">Descripción (opcional)</label>
+            <textarea
+              id="taskDescription"
+              class="form-input"
+              formControlName="description"
+              rows="3"
+              placeholder="Detalles de la tarea..."
+              aria-label="Descripción de la tarea"></textarea>
+          </div>
+          <button type="submit" class="login-button" [disabled]="!taskForm.valid" aria-label="Agregar tarea">
+            Agregar Tarea
+          </button>
+        </form>
+      </section>
+
+      <!-- Filtros y estadísticas -->
+      <section class="dashboard-info glassmorphism">
+        <h3>Estadísticas</h3>
+        <div class="stats-container">
+          <div class="stat-item">
+            <span class="stat-number">{{ totalTasks }}</span>
+            <span class="stat-label">Total tareas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">{{ completedTasks }}</span>
+            <span class="stat-label">Completadas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">{{ pendingTasks }}</span>
+            <span class="stat-label">Pendientes</span>
+          </div>
+        </div>
+
+        <h3>Filtrar por</h3>
+        <div class="filter-container">
+          <button
+            class="filter-btn"
+            [class.active]="currentFilter === 'all'"
+            (click)="setFilter('all')"
+            title="Mostrar todas las tareas">
+            Todas
+          </button>
+          <button
+            class="filter-btn"
+            [class.active]="currentFilter === 'pending'"
+            (click)="setFilter('pending')"
+            title="Mostrar tareas pendientes">
+            Pendientes
+          </button>
+          <button
+            class="filter-btn"
+            [class.active]="currentFilter === 'completed'"
+            (click)="setFilter('completed')"
+            title="Mostrar tareas completadas">
+            Completadas
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Columna derecha: Lista de tareas -->
+    <div class="dashboard-right">
+      <section class="task-list-section">
+        <h2 class="task-list-title">Tus tareas</h2>
+
+        @if (filteredTasks.length === 0) {
+          <div class="empty-state glassmorphism">
+            <p>No hay tareas {{ currentFilter !== 'all' ? currentFilter : '' }}</p>
+            @if (currentFilter === 'all') {
+              <p>¡Comienza agregando una nueva tarea!</p>
+            }
+          </div>
+        }
+
+        <div class="task-list">
+          @for (task of filteredTasks; track task.id) {
+            <div class="task-item glassmorphism" [class.task-completed]="task.completed">
+
+              <div class="task-checkbox">
+                <input
+                  type="checkbox"
+                  [id]="'task-'+task.id"
+                  [checked]="task.completed"
+                  (change)="toggleTask(task.id_act_usuario)"
+                  [attr.aria-label]="'Marcar tarea ' + task.title + ' como ' + (task.completed ? 'pendiente' : 'completada')">
+                <label [for]="'task-'+task.id" [attr.aria-label]="'Marcar tarea ' + task.title + ' como ' + (task.completed ? 'pendiente' : 'completada')">
+                  <span class="visually-hidden">Marcar tarea {{task.title}} como {{task.completed ? 'pendiente' : 'completada'}}</span>
+                </label>
+              </div>
+
+              <div class="task-content">
+                <h3 class="task-title">{{ task.title }}</h3>
+                @if (task.description) {
+                  <p class="task-description">{{ task.description }}</p>
+                }
+                <div class="task-meta">
+                  <span class="task-date">Creada: {{ task.createdAt | date:'medium' }}</span>
+                  <span class="task-status">{{ task.completed ? 'Completada' : 'Pendiente' }}</span>
+                </div>
+              </div>
+
+              <div class="task-actions">
+                <button class="btn-icon" (click)="editTask(task)" title="Editar tarea: {{task.title}}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  <span class="visually-hidden">Editar tarea: {{task.title}}</span>
+                </button>
+                <button class="btn-icon btn-delete" (click)="confirmDelete(task)" title="Eliminar tarea: {{task.title}}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                    <path d="M3 6h18"></path>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                  <span class="visually-hidden">Eliminar tarea: {{task.title}}</span>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Modal de edición -->
+ @if (editingTask) {
+  <div class="task-modal-overlay">
+    <div class="task-modal">
+      <!-- Header con estilo consistente -->
+      <div class="task-modal-header">
+        <h2>Editar Tarea</h2>
+      </div>
+
+      <!-- Body del modal -->
+      <div class="task-modal-body">
+        <form class="task-form" [formGroup]="editForm" (ngSubmit)="saveEdit()">
+          <div class="task-form-group">
+            <label class="task-form-label">Título</label>
+            <input
+              type="text"
+              class="task-form-input"
+              formControlName="title"
+              required
+              placeholder="Título de la tarea"
+              aria-label="Título de la tarea">
+            @if (editForm.get('title')?.invalid && editForm.get('title')?.touched) {
+              <div class="task-error-message">El título es requerido</div>
+            }
+          </div>
+
+          <div class="task-form-group">
+            <label class="task-form-label">Descripción</label>
+            <textarea
+              class="task-form-input"
+              formControlName="description"
+              rows="3"
+              placeholder="Descripción de la tarea"
+              aria-label="Descripción de la tarea"></textarea>
+          </div>
+
+          <!-- Footer de acciones -->
+          <div class="task-modal-footer">
+            <button type="button" class="task-btn task-btn-cancel" (click)="cancelEdit()">Cancelar</button>
+            <button type="submit" class="task-btn task-btn-confirm" [disabled]="!editForm.valid">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}
+</div>

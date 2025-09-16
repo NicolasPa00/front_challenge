@@ -1,0 +1,321 @@
+// Colores base
+$gray-50:  #fafafa;
+$gray-100: #f5f5f5;
+$gray-200: #eeeeee;
+$gray-300: #e0e0e0;
+$gray-400: #bdbdbd;
+$gray-500: #9e9e9e;
+$gray-600: #757575;
+$gray-700: #616161;
+$gray-800: #424242;
+$gray-900: #212121;
+$black:    #000000;
+
+// Mixin para glassmorphism
+@mixin glassmorphism {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+}
+
+/* ---------- Layout container ---------- */
+/* Mobile-first: centrado por defecto */
+.login-container {
+  min-height: 100vh;
+  display: grid;
+   grid-template-columns: 1fr 420px;
+  align-items: center;
+  justify-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, $gray-900 0%, $black 100%);
+
+  /* padding-right responsivo para que en pantallas grandes la card no quede pegada */
+  padding-right: clamp(20px, 8vw, 80px);
+
+  @media (max-width: 899px) {
+    /* en móviles pasamos a una sola columna y centramos la card */
+    grid-template-columns: 1fr;
+    justify-items: center;
+    padding: 12px;
+  }
+}
+
+.login-image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  @media (max-width: 768px) {
+    display: none; // ocultamos en móviles
+  }
+}
+
+/* Centrar visualmente la card dentro de la columna derecha.
+   La siguiente regla coloca la card en la columna 2 (la de la derecha)
+   y le añade un margen derecho para que no quede pegada al borde. */
+.login-card {
+  @include glassmorphism;
+  border-radius: 12px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  animation: fadeInUp 420ms cubic-bezier(.2,.9,.3,1);
+  justify-self: end;              /* sitúa la card en la parte derecha de su celda */
+  margin-right: 24px;             /* espacio desde el borde derecho */
+  box-sizing: border-box;
+
+  @media (max-width: 899px) {
+    justify-self: center;         /* en móvil centrar */
+    margin-right: 0;
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+}
+
+/* fallback si tu layout no usa grid: */
+@supports (display: flex) {
+  /* nada adicional, solo mantener compatibilidad */
+}
+
+/* ---------- Animaciones ---------- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- Tipografía / encabezados ---------- */
+.login-title {
+  color: $gray-100;
+  text-align: center;
+  margin-bottom: 1.6rem;
+  font-weight: 600;
+  font-size: 1.6rem;
+}
+
+/* ---------- Form ---------- */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  color: $gray-300;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* Input base */
+.form-input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 0.72rem 1rem;
+  color: $gray-100;
+  font-size: 0.98rem;
+  transition: all 0.18s ease;
+  width: 100%;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: 3px solid rgba(255,255,255,0.06); /* foco visible */
+    border-color: $gray-300;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.45);
+  }
+
+  &.invalid {
+    border-color: $gray-400;
+    background: rgba(255,255,255,0.03);
+  }
+
+  &::placeholder {
+    color: rgba($gray-300, 0.8);
+  }
+}
+
+/* Password container */
+.password-container {
+  position: relative;
+
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: $gray-300;
+    padding: 6px;
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .toggle-password:focus {
+    outline: 2px solid rgba(255,255,255,0.06);
+    border-radius: 6px;
+  }
+}
+
+/* Checkbox */
+.form-options {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: $gray-300;
+  font-size: 0.95rem;
+
+  .checkbox-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: $gray-400;
+      cursor: pointer;
+    }
+  }
+}
+
+/* Submit button */
+.login-button {
+  background: linear-gradient(180deg, $gray-800 0%, $gray-700 100%);
+  color: $gray-100;
+  border: none;
+  border-radius: 8px;
+  padding: 0.78rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  &:focus {
+    outline: 3px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+  }
+
+  &:disabled {
+    background: $gray-600;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+/* Errores */
+.error-message {
+  color: $gray-200;
+  font-size: 0.85rem;
+  margin-top: 0.45rem;
+  padding: 0.45rem;
+  background: rgba(255,255,255,0.03);
+  border-radius: 6px;
+  border-left: 3px solid rgba($gray-400, 0.55);
+
+  &.general-error {
+    margin-top: 1rem;
+  }
+}
+
+/* ---------- Formulario de registro ---------- */
+
+.login-container:has(.registration-card) {
+  justify-items: center;
+}
+
+.login-card.registration-card {
+  max-width: 700px;
+  width: 100%;
+  justify-self: center;
+  margin-right: -60px;
+
+  // Para pantallas grandes
+  @media (min-width: 900px) {
+    max-width: 700px;
+    grid-column: 1 / -1;
+  }
+}
+
+/* --- Registro con 2 columnas --- */
+.login-form.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.login-form.two-columns .button-container {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.login-button.reg {
+  width: 60%;
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.login-form.two-columns .error-message {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+  .login-form.two-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .login-button  {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.form-options {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Ajustamos el mensaje de error general */
+.general-error {
+  grid-column: 1 / -1;
+}
+

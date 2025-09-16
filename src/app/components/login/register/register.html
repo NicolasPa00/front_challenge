@@ -1,0 +1,122 @@
+<div class="login-container">
+  <div class="login-card registration-card">
+    <h2 class="login-title">Regístrate</h2>
+
+    <form class="login-form two-columns" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Nombre -->
+      <div class="form-group">
+        <label for="name" class="form-label">Nombre</label>
+        <input
+          id="name"
+          type="text"
+          formControlName="name"
+          class="form-input"
+          [class.invalid]="name?.invalid && name?.touched"
+          aria-describedby="name-error"
+          [attr.aria-invalid]="name?.invalid && name?.touched">
+        <div *ngIf="name?.invalid && name?.touched" class="error-message" id="name-error">
+          <span *ngIf="name?.errors?.['required']">El nombre es requerido</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="apellido" class="form-label">Apellido</label>
+        <input
+          id="apellido"
+          type="text"
+          formControlName="apellido"
+          class="form-input"
+          [class.invalid]="apellido?.invalid && apellido?.touched"
+          aria-describedby="apellido-error"
+          [attr.aria-invalid]="apellido?.invalid && apellido?.touched">
+        <div *ngIf="apellido?.invalid && apellido?.touched" class="error-message" id="apellido-error">
+          <span *ngIf="apellido?.errors?.['required']">El apellido es requerido</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="documento" class="form-label">Documento</label>
+        <input
+          id="documento"
+          type="text"
+          formControlName="documento"
+          class="form-input"
+          [class.invalid]="documento?.invalid && documento?.touched"
+          aria-describedby="documento-error"
+          [attr.aria-invalid]="documento?.invalid && documento?.touched">
+        <div *ngIf="documento?.invalid && documento?.touched" class="error-message" id="documento-error">
+          <span *ngIf="documento?.errors?.['required']">El documento es requerido</span>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email" class="form-label">Correo electrónico</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="form-input"
+          [class.invalid]="email?.invalid && email?.touched"
+          aria-describedby="email-error"
+          [attr.aria-invalid]="email?.invalid && email?.touched">
+        <div *ngIf="email?.invalid && email?.touched" class="error-message" id="email-error">
+          <span *ngIf="email?.errors?.['required']">El correo electrónico es requerido</span>
+          <span *ngIf="email?.errors?.['email']">Formato de correo electrónico inválido</span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password" class="form-label">Contraseña</label>
+        <div class="password-container">
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            class="form-input"
+            [class.invalid]="password?.invalid && password?.touched"
+            aria-describedby="password-error"
+            [attr.aria-invalid]="password?.invalid && password?.touched">
+        </div>
+        <div *ngIf="password?.invalid && password?.touched" class="error-message" id="password-error">
+          <span *ngIf="password?.errors?.['required']">La contraseña es requerida</span>
+          <span *ngIf="password?.errors?.['minlength']">Debe tener al menos 6 caracteres</span>
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          formControlName="confirmPassword"
+          class="form-input"
+          [class.invalid]="confirmPassword?.invalid && confirmPassword?.touched"
+          aria-describedby="confirmPassword-error"
+          [attr.aria-invalid]="confirmPassword?.invalid && confirmPassword?.touched">
+        <div *ngIf="registerForm.hasError('passwordMismatch') && confirmPassword?.touched" class="error-message" id="confirmPassword-error">
+          Las contraseñas no coinciden
+        </div>
+      </div>
+
+      <!-- Botón -->
+      <div class="button-container">
+        <button type="submit" class="login-button reg" [disabled]="registerForm.invalid || isLoading">
+          <span *ngIf="!isLoading">Crear cuenta</span>
+          <span *ngIf="isLoading">Cargando...</span>
+        </button>
+      </div>
+    </form>
+    <div class="form-options">
+      <span>¿Ya tienes cuenta?</span>
+      <a routerLink="/login"><strong>Inicia sesión</strong></a>
+    </div>
+
+    <!-- Error general -->
+    <div *ngIf="errorMessage" class="error-message general-error">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>

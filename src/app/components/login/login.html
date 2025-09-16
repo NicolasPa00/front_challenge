@@ -1,0 +1,85 @@
+<div class="login-container">
+  <div class="login-image-container">
+    <img src="angularlogo.png" alt="Angular logo">
+  </div>
+  <div class="login-card">
+    <h2 class="login-title">Iniciar Sesión</h2>
+
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email" class="form-label">Correo electrónico</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="form-input"
+          [class.invalid]="email?.invalid && email?.touched"
+          aria-describedby="email-error"
+          [attr.aria-invalid]="email?.invalid && email?.touched">
+        <div *ngIf="email?.invalid && email?.touched" class="error-message" id="email-error">
+          <span *ngIf="email?.errors?.['required']">El correo electrónico es requerido</span>
+          <span *ngIf="email?.errors?.['email']">Formato de correo electrónico inválido</span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password" class="form-label">Contraseña</label>
+        <div class="password-container">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            class="form-input"
+            [class.invalid]="password?.invalid && password?.touched"
+            aria-describedby="password-error"
+            [attr.aria-invalid]="password?.invalid && password?.touched">
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+            <span class="icon">{{ showPassword ? '🙈' : '👁️' }}</span>
+          </button>
+        </div>
+        <div *ngIf="password?.invalid && password?.touched" class="error-message" id="password-error">
+          <span *ngIf="password?.errors?.['required']">La contraseña es requerida</span>
+          <span *ngIf="password?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</span>
+        </div>
+      </div>
+
+      <!-- Remember me -->
+      <div class="form-options">
+        <label class="checkbox-container">
+          <input type="checkbox" formControlName="rememberMe">
+          <span class="checkmark"></span>
+          Recuérdame
+        </label>
+      </div>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="login-button"
+        [disabled]="loginForm.invalid || isLoading">
+        <span *ngIf="!isLoading">Iniciar Sesión</span>
+        <span *ngIf="isLoading">Cargando...</span>
+      </button>
+    </form>
+    <br>
+
+      <!-- Register link -->
+     <div class="form-options">
+        <label class="checkbox-container">
+          <span class="checkmark"></span>
+          ¿No cuentas con una cuenta? <a routerLink="/register"><strong>Regístrate</strong></a>
+        </label>
+      </div>
+
+    <!-- General error -->
+    <div *ngIf="errorMessage" class="error-message general-error">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>
